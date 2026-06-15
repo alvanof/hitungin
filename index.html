@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hitungin</title>
+    <meta name="description" content="Aplikasi simpel untuk menghitung pengeluaran tahunan dan upah pegawai.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main class="app-container">
+        <header>
+            <h1>Hitungin</h1>
+        </header>
+
+        <section class="card calculator-section">
+            <h2>Hitung Pengeluaran</h2>
+            
+            <div class="input-group">
+                <label for="daily-expense">Pengeluaran 1 Hari (dalam Ribuan)</label>
+                <div class="input-wrapper">
+                    <span class="currency">Rp</span>
+                    <input type="number" id="daily-expense" placeholder="100 untuk Rp 100.000" min="0">
+                </div>
+            </div>
+
+            <div class="results-grid">
+                <div class="result-card">
+                    <span class="result-label">1 Bulan</span>
+                    <span class="result-value" id="monthly-expense-result">Rp 0</span>
+                </div>
+                <div class="result-card pastel-yellow">
+                    <span class="result-label">1 Tahun</span>
+                    <span class="result-value" id="yearly-expense-result">Rp 0</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="card calculator-section">
+            <h2>Upah Pegawai</h2>
+            
+            <div class="input-group">
+                <label for="employee-wage">Gaji per Bulan (dalam Ribuan)</label>
+                <div class="input-wrapper">
+                    <span class="currency">Rp</span>
+                    <input type="number" id="employee-wage" placeholder="1500 untuk 1,5 Juta" min="0">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="employee-count">Jumlah Pegawai</label>
+                <div class="input-wrapper">
+                    <span class="currency">👥</span>
+                    <input type="number" id="employee-count" placeholder="Contoh: 5" min="0">
+                </div>
+            </div>
+
+            <div class="results-grid">
+                <div class="result-card">
+                    <span class="result-label">Total 1 Bulan</span>
+                    <span class="result-value" id="monthly-wage-result">Rp 0</span>
+                </div>
+                <div class="result-card pastel-blue">
+                    <span class="result-label">Total 1 Tahun</span>
+                    <span class="result-value" id="yearly-wage-result">Rp 0</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
