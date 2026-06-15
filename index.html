@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <main class="app-container">
         <header>
@@ -18,12 +20,12 @@
 
         <section class="card calculator-section">
             <h2>Hitung Pengeluaran</h2>
-            
+
             <div class="input-group">
-                <label for="daily-expense">Pengeluaran 1 Hari (dalam Ribuan)</label>
+                <label for="daily-expense">Pengeluaran 1 Hari</label>
                 <div class="input-wrapper">
                     <span class="currency">Rp</span>
-                    <input type="number" id="daily-expense" placeholder="100 untuk Rp 100.000" min="0">
+                    <input type="number" id="daily-expense" min="0">
                 </div>
             </div>
 
@@ -41,12 +43,12 @@
 
         <section class="card calculator-section">
             <h2>Upah Pegawai</h2>
-            
+
             <div class="input-group">
-                <label for="employee-wage">Gaji per Bulan (dalam Ribuan)</label>
+                <label for="employee-wage">Gaji per Bulan</label>
                 <div class="input-wrapper">
                     <span class="currency">Rp</span>
-                    <input type="number" id="employee-wage" placeholder="1500 untuk 1,5 Juta" min="0">
+                    <input type="number" id="employee-wage" min="0">
                 </div>
             </div>
 
@@ -73,4 +75,5 @@
 
     <script src="app.js"></script>
 </body>
+
 </html>
