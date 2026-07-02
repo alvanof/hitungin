@@ -3,9 +3,13 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hitungin</title>
-    <meta name="description" content="Aplikasi simpel untuk menghitung pengeluaran tahunan dan upah pegawai.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hitungin - Catatan Sensus Digital</title>
+    <meta name="description" content="Aplikasi catatan sensus digital untuk petugas sensus. Simpan data responden langsung di HP, bisa offline.">
+    <meta name="theme-color" content="#7c6cf0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="manifest.json">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -13,65 +17,489 @@
 </head>
 
 <body>
-    <main class="app-container">
-        <header>
-            <h1>Hitungin</h1>
-        </header>
-
-        <section class="card calculator-section">
-            <h2>Hitung Pengeluaran</h2>
-
-            <div class="input-group">
-                <label for="daily-expense">Pengeluaran 1 Hari</label>
-                <div class="input-wrapper">
-                    <span class="currency">Rp</span>
-                    <input type="number" id="daily-expense" min="0">
+    <div id="app">
+        <!-- ========== PAGE: BERANDA ========== -->
+        <section id="page-home" class="page active">
+            <header class="page-header">
+                <div class="header-brand">
+                    <div class="brand-icon">H</div>
+                    <div>
+                        <h1>Hitungin</h1>
+                        <p class="header-subtitle">Catatan Sensus Digital</p>
+                    </div>
                 </div>
-            </div>
-
-            <div class="results-grid">
-                <div class="result-card">
-                    <span class="result-label">1 Bulan</span>
-                    <span class="result-value" id="monthly-expense-result">Rp 0</span>
+            </header>
+            <div class="page-content">
+                <div class="stats-grid">
+                    <div class="stat-card stat-purple">
+                        <div class="stat-icon">📊</div>
+                        <span class="stat-number" id="stat-total">0</span>
+                        <span class="stat-label">Total Data</span>
+                    </div>
+                    <div class="stat-card stat-cyan">
+                        <div class="stat-icon">📅</div>
+                        <span class="stat-number" id="stat-today">0</span>
+                        <span class="stat-label">Hari Ini</span>
+                    </div>
+                    <div class="stat-card stat-emerald">
+                        <div class="stat-icon">📆</div>
+                        <span class="stat-number" id="stat-week">0</span>
+                        <span class="stat-label">Minggu Ini</span>
+                    </div>
                 </div>
-                <div class="result-card pastel-yellow">
-                    <span class="result-label">1 Tahun</span>
-                    <span class="result-value" id="yearly-expense-result">Rp 0</span>
+
+                <div class="quick-actions">
+                    <button class="btn btn-primary btn-lg" id="btn-new-form">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Tambah Data Baru
+                    </button>
+                    <div class="action-row">
+                        <button class="btn btn-glass" id="btn-export">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                            Export
+                        </button>
+                        <button class="btn btn-glass" id="btn-import">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            Import
+                        </button>
+                    </div>
+                </div>
+
+                <div class="section-divider">
+                    <h2>Data Terbaru</h2>
+                    <button class="btn btn-text" id="btn-see-all">Lihat Semua →</button>
+                </div>
+                <div id="recent-list">
+                    <div class="empty-state" id="empty-home">
+                        <div class="empty-icon">📋</div>
+                        <p>Belum ada data sensus</p>
+                        <span>Ketuk "Tambah Data Baru" untuk mulai</span>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <section class="card calculator-section">
-            <h2>Upah Pegawai</h2>
-
-            <div class="input-group">
-                <label for="employee-wage">Gaji per Bulan</label>
-                <div class="input-wrapper">
-                    <span class="currency">Rp</span>
-                    <input type="number" id="employee-wage" min="0">
+        <!-- ========== PAGE: FORM SENSUS ========== -->
+        <section id="page-form" class="page">
+            <header class="page-header">
+                <div class="header-row">
+                    <h1>Form Sensus</h1>
+                    <button class="btn btn-icon" id="btn-reset-form" title="Reset Form">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+                    </button>
                 </div>
+            </header>
+            <div class="page-content">
+                <form id="census-form" autocomplete="off">
+                    <!-- Hidden field for edit mode -->
+                    <input type="hidden" id="edit-record-id" value="">
+
+                    <!-- Section 1: Data Kepala Keluarga -->
+                    <div class="form-section open" data-section="kepala">
+                        <div class="form-section-header">
+                            <span class="section-icon">👤</span>
+                            <span class="section-title">Data Kepala Keluarga</span>
+                            <svg class="chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+                        </div>
+                        <div class="form-section-body">
+                            <div class="form-group">
+                                <label for="f-nama">1. Nama Kepala Keluarga <span class="required">*</span></label>
+                                <input type="text" id="f-nama" class="input-field" placeholder="Masukkan nama lengkap" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="f-whatsapp">2. Nomor WhatsApp</label>
+                                <input type="tel" id="f-whatsapp" class="input-field" placeholder="08xxxxxxxxxx">
+                            </div>
+                            <div class="form-group">
+                                <label>Dokumentasi Foto</label>
+                                <div class="chip-group">
+                                    <label class="chip"><input type="checkbox" id="f-foto-geotag"><span>📍 Geotag</span></label>
+                                    <label class="chip"><input type="checkbox" id="f-foto-kk"><span>📄 KK</span></label>
+                                    <label class="chip"><input type="checkbox" id="f-foto-listrik"><span>⚡ Listrik</span></label>
+                                    <label class="chip"><input type="checkbox" id="f-foto-ruangtamu"><span>🛋️ Ruang Tamu</span></label>
+                                    <label class="chip"><input type="checkbox" id="f-foto-depanrumah"><span>🏠 Depan Rumah</span></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 2: Anggota Keluarga -->
+                    <div class="form-section" data-section="anggota">
+                        <div class="form-section-header">
+                            <span class="section-icon">👨‍👩‍👧‍👦</span>
+                            <span class="section-title">Anggota Keluarga</span>
+                            <span class="badge" id="member-count">0</span>
+                            <svg class="chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+                        </div>
+                        <div class="form-section-body">
+                            <div id="family-members"></div>
+                            <button type="button" class="btn btn-dashed" id="btn-add-member">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                Tambah Anggota
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Section 3: Asset dan Rumah -->
+                    <div class="form-section" data-section="asset">
+                        <div class="form-section-header">
+                            <span class="section-icon">🏠</span>
+                            <span class="section-title">Asset dan Rumah</span>
+                            <svg class="chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+                        </div>
+                        <div class="form-section-body">
+                            <div class="form-group">
+                                <label for="f-rumah-milik">3. Rumah Milik</label>
+                                <input type="text" id="f-rumah-milik" class="input-field" placeholder="Milik sendiri / sewa / dll">
+                            </div>
+                            <div class="form-group">
+                                <label for="f-sertifikat">4. Sertifikat</label>
+                                <select id="f-sertifikat" class="input-field">
+                                    <option value="">-- Pilih --</option>
+                                    <option value="SHM">SHM</option>
+                                    <option value="SHGB">SHGB</option>
+                                    <option value="Lainnya">Lainnya</option>
+                                    <option value="Tidak ada">Tidak ada</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="f-luas-rumah">5. Luas Rumah</label>
+                                    <input type="text" id="f-luas-rumah" class="input-field" placeholder="m²">
+                                </div>
+                                <div class="form-group">
+                                    <label for="f-harga-sewa">6. Harga Sewa/Bln</label>
+                                    <input type="number" id="f-harga-sewa" class="input-field" placeholder="Rp">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="f-toilet">7. Keberadaan Toilet</label>
+                                    <select id="f-toilet" class="input-field">
+                                        <option value="">-- Pilih --</option>
+                                        <option value="Ada - di dalam">Ada - di dalam</option>
+                                        <option value="Ada - di luar">Ada - di luar</option>
+                                        <option value="Tidak ada">Tidak ada</option>
+                                        <option value="Umum">Umum</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="f-air-minum">8. Air Minum</label>
+                                    <select id="f-air-minum" class="input-field">
+                                        <option value="">-- Pilih --</option>
+                                        <option value="PDAM">PDAM</option>
+                                        <option value="Sumur">Sumur</option>
+                                        <option value="Mata air">Mata air</option>
+                                        <option value="Air hujan">Air hujan</option>
+                                        <option value="Galon">Galon</option>
+                                        <option value="Lainnya">Lainnya</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="f-daya-listrik">9. Daya Listrik</label>
+                                <select id="f-daya-listrik" class="input-field">
+                                    <option value="">-- Pilih --</option>
+                                    <option value="450 VA">450 VA</option>
+                                    <option value="900 VA">900 VA</option>
+                                    <option value="1300 VA">1300 VA</option>
+                                    <option value="2200 VA">2200 VA</option>
+                                    <option value="> 2200 VA">&gt; 2200 VA</option>
+                                    <option value="Tidak ada">Tidak ada</option>
+                                </select>
+                            </div>
+
+                            <div class="form-subsection">
+                                <h3>💰 Biaya Bulanan &amp; Tahunan</h3>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="f-biaya-listrik">10. Listrik/Bln</label>
+                                    <input type="number" id="f-biaya-listrik" class="input-field" placeholder="Rp">
+                                </div>
+                                <div class="form-group">
+                                    <label for="f-biaya-internet">11. Internet/Bln</label>
+                                    <input type="number" id="f-biaya-internet" class="input-field" placeholder="Rp">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="f-belanja-makan">12. Belanja Makan/Hari</label>
+                                <input type="number" id="f-belanja-makan" class="input-field" placeholder="Rp">
+                            </div>
+                            <div class="form-group">
+                                <label for="f-biaya-rutin">13. Biaya Rutin Bulanan</label>
+                                <p class="field-hint">Bensin, Perlengkapan Mandi, Air Pam, Arisan, Iuran, Uang Sekolah</p>
+                                <input type="number" id="f-biaya-rutin" class="input-field" placeholder="Rp">
+                            </div>
+                            <div class="form-group">
+                                <label for="f-biaya-tidak-rutin">14. Biaya Tidak Rutin/Tahun</label>
+                                <p class="field-hint">Pajak Kendaraan, PBB, UKT, Kosmetik, Servis Kendaraan</p>
+                                <input type="number" id="f-biaya-tidak-rutin" class="input-field" placeholder="Rp">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 4: Kepemilikan Barang -->
+                    <div class="form-section" data-section="kepemilikan">
+                        <div class="form-section-header">
+                            <span class="section-icon">📦</span>
+                            <span class="section-title">Kepemilikan Barang</span>
+                            <svg class="chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+                        </div>
+                        <div class="form-section-body">
+                            <label class="form-label-top">15. Apakah Memiliki</label>
+                            <div class="checkbox-grid">
+                                <label class="check-card"><input type="checkbox" id="f-gas3kg"><span class="check-icon">🔥</span><span>Gas 3Kg</span></label>
+                                <label class="check-card"><input type="checkbox" id="f-gas55kg"><span class="check-icon">🔥</span><span>Gas 5.5Kg</span></label>
+                                <label class="check-card"><input type="checkbox" id="f-kulkas"><span class="check-icon">🧊</span><span>Kulkas</span></label>
+                                <label class="check-card"><input type="checkbox" id="f-komputer"><span class="check-icon">💻</span><span>Komputer</span></label>
+                                <label class="check-card"><input type="checkbox" id="f-ac"><span class="check-icon">❄️</span><span>AC</span></label>
+                                <label class="check-card"><input type="checkbox" id="f-emas"><span class="check-icon">💎</span><span>Emas</span></label>
+                            </div>
+
+                            <div class="asset-with-value">
+                                <div class="asset-item">
+                                    <label class="check-inline"><input type="checkbox" id="f-motor"><span>🏍️ Motor</span></label>
+                                    <input type="number" id="f-motor-harga" class="input-field input-sm" placeholder="Harga (Rp)" disabled>
+                                </div>
+                                <div class="asset-item">
+                                    <label class="check-inline"><input type="checkbox" id="f-mobil"><span>🚗 Mobil</span></label>
+                                    <input type="number" id="f-mobil-harga" class="input-field input-sm" placeholder="Harga (Rp)" disabled>
+                                </div>
+                                <div class="asset-item">
+                                    <label class="check-inline"><input type="checkbox" id="f-tanah"><span>🌍 Tanah</span></label>
+                                    <input type="text" id="f-tanah-lokasi" class="input-field input-sm" placeholder="Lokasi" disabled>
+                                </div>
+                                <div class="asset-item">
+                                    <label class="check-inline"><input type="checkbox" id="f-rumah-lain"><span>🏘️ Rumah Lain</span></label>
+                                    <input type="text" id="f-rumah-lokasi" class="input-field input-sm" placeholder="Lokasi" disabled>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 5: Usaha -->
+                    <div class="form-section" data-section="usaha">
+                        <div class="form-section-header">
+                            <span class="section-icon">💼</span>
+                            <span class="section-title">Usaha</span>
+                            <svg class="chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+                        </div>
+                        <div class="form-section-body">
+                            <label class="form-label-top">16. Apakah Memiliki Usaha?</label>
+                            <div class="chip-group chip-wrap">
+                                <label class="chip"><input type="checkbox" id="f-usaha-pertanian"><span>🌾 Pertanian</span></label>
+                                <label class="chip"><input type="checkbox" id="f-usaha-perkebunan"><span>🌴 Perkebunan</span></label>
+                                <label class="chip"><input type="checkbox" id="f-usaha-peternakan"><span>🐄 Peternakan</span></label>
+                                <label class="chip"><input type="checkbox" id="f-usaha-kehutanan"><span>🌲 Kehutanan</span></label>
+                                <label class="chip"><input type="checkbox" id="f-usaha-perikanan"><span>🐟 Perikanan</span></label>
+                                <label class="chip"><input type="checkbox" id="f-usaha-sewa-lahan"><span>📐 Penyewaan Lahan</span></label>
+                                <label class="chip"><input type="checkbox" id="f-usaha-koskosan"><span>🏢 Kos-Kosan</span></label>
+                                <label class="chip"><input type="checkbox" id="f-usaha-konstruksi"><span>🔨 Konstruksi</span></label>
+                                <label class="chip"><input type="checkbox" id="f-usaha-online"><span>📱 Online</span></label>
+                                <label class="chip"><input type="checkbox" id="f-usaha-keliling"><span>🚲 Keliling</span></label>
+                                <label class="chip"><input type="checkbox" id="f-usaha-jasa-pertanian"><span>🚜 Jasa Pertanian</span></label>
+                            </div>
+                            <div class="form-group" style="margin-top: 12px;">
+                                <label for="f-usaha-lainnya">Usaha Lainnya</label>
+                                <input type="text" id="f-usaha-lainnya" class="input-field" placeholder="Tulis jenis usaha lain...">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 6: Penyelesaian -->
+                    <div class="form-section" data-section="penyelesaian">
+                        <div class="form-section-header">
+                            <span class="section-icon">✍️</span>
+                            <span class="section-title">Penyelesaian</span>
+                            <svg class="chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+                        </div>
+                        <div class="form-section-body">
+                            <div class="form-group">
+                                <label>Tanda Tangan</label>
+                                <div class="signature-pad-container">
+                                    <canvas id="signature-canvas"></canvas>
+                                    <button type="button" class="btn btn-sm btn-glass" id="btn-clear-signature">Hapus</button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="check-inline check-lg">
+                                    <input type="checkbox" id="f-stiker">
+                                    <span>🏷️ Stiker Sudah Ditempel</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="f-catatan">Catatan Tambahan</label>
+                                <textarea id="f-catatan" class="input-field" rows="3" placeholder="Catatan opsional..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit -->
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary btn-lg btn-block" id="btn-submit-form">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span id="btn-submit-text">Simpan Data</span>
+                        </button>
+                    </div>
+                </form>
             </div>
+        </section>
 
-            <div class="input-group">
-                <label for="employee-count">Jumlah Pegawai</label>
-                <div class="input-wrapper">
-                    <span class="currency">👥</span>
-                    <input type="number" id="employee-count" placeholder="Contoh: 5" min="0">
+        <!-- ========== PAGE: DATA ========== -->
+        <section id="page-data" class="page">
+            <header class="page-header">
+                <h1>Data Sensus</h1>
+            </header>
+            <div class="page-content">
+                <div class="search-bar">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="text" id="search-input" placeholder="Cari nama atau WhatsApp...">
+                    <button class="btn btn-icon btn-sm" id="btn-clear-search" style="display:none">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
                 </div>
-            </div>
-
-            <div class="results-grid">
-                <div class="result-card">
-                    <span class="result-label">Total 1 Bulan</span>
-                    <span class="result-value" id="monthly-wage-result">Rp 0</span>
+                <div class="data-info">
+                    <span id="data-count">0 data</span>
+                    <select id="sort-select" class="input-field input-sm">
+                        <option value="newest">Terbaru</option>
+                        <option value="oldest">Terlama</option>
+                        <option value="name">Nama A-Z</option>
+                    </select>
                 </div>
-                <div class="result-card pastel-blue">
-                    <span class="result-label">Total 1 Tahun</span>
-                    <span class="result-value" id="yearly-wage-result">Rp 0</span>
+                <div id="data-list">
+                    <div class="empty-state" id="empty-data">
+                        <div class="empty-icon">📂</div>
+                        <p>Belum ada data</p>
+                        <span>Data sensus yang tersimpan akan muncul di sini</span>
+                    </div>
                 </div>
             </div>
         </section>
-    </main>
+
+        <!-- ========== PAGE: TOOLS ========== -->
+        <section id="page-tools" class="page">
+            <header class="page-header">
+                <h1>Tools</h1>
+            </header>
+            <div class="page-content">
+                <div class="card tool-card">
+                    <h2>🧮 Hitung Pengeluaran</h2>
+                    <div class="form-group">
+                        <label for="daily-expense">Pengeluaran 1 Hari (ribuan)</label>
+                        <div class="input-with-prefix">
+                            <span class="input-prefix">Rp</span>
+                            <input type="number" id="daily-expense" class="input-field" min="0" placeholder="Contoh: 50">
+                        </div>
+                    </div>
+                    <div class="results-grid">
+                        <div class="result-card result-amber">
+                            <span class="result-label">1 Bulan</span>
+                            <span class="result-value" id="monthly-expense-result">Rp 0</span>
+                        </div>
+                        <div class="result-card result-rose">
+                            <span class="result-label">1 Tahun</span>
+                            <span class="result-value" id="yearly-expense-result">Rp 0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card tool-card">
+                    <h2>👥 Upah Pegawai</h2>
+                    <div class="form-group">
+                        <label for="employee-wage">Gaji per Bulan (ribuan)</label>
+                        <div class="input-with-prefix">
+                            <span class="input-prefix">Rp</span>
+                            <input type="number" id="employee-wage" class="input-field" min="0" placeholder="Contoh: 2000">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="employee-count">Jumlah Pegawai</label>
+                        <div class="input-with-prefix">
+                            <span class="input-prefix">👥</span>
+                            <input type="number" id="employee-count" class="input-field" min="0" placeholder="Contoh: 5">
+                        </div>
+                    </div>
+                    <div class="results-grid">
+                        <div class="result-card result-cyan">
+                            <span class="result-label">Total 1 Bulan</span>
+                            <span class="result-value" id="monthly-wage-result">Rp 0</span>
+                        </div>
+                        <div class="result-card result-emerald">
+                            <span class="result-label">Total 1 Tahun</span>
+                            <span class="result-value" id="yearly-wage-result">Rp 0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ========== BOTTOM NAVIGATION ========== -->
+    <nav id="bottom-nav">
+        <button class="nav-btn active" data-page="home">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span>Beranda</span>
+        </button>
+        <button class="nav-btn" data-page="form">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            <span>Form</span>
+        </button>
+        <button class="nav-btn" data-page="data">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+            <span>Data</span>
+        </button>
+        <button class="nav-btn" data-page="tools">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+            <span>Tools</span>
+        </button>
+    </nav>
+
+    <!-- ========== MODAL: View/Edit Record ========== -->
+    <div id="record-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Detail Data</h2>
+                <button class="btn btn-icon" id="btn-close-modal">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body"></div>
+            <div class="modal-footer">
+                <button class="btn btn-glass" id="btn-modal-edit">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    Edit
+                </button>
+                <button class="btn btn-danger" id="btn-modal-delete">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                    Hapus
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== CONFIRM DIALOG ========== -->
+    <div id="confirm-dialog" class="modal-overlay hidden">
+        <div class="modal-content modal-sm">
+            <div class="modal-body" style="text-align:center;padding:24px;">
+                <div class="confirm-icon" id="confirm-icon">⚠️</div>
+                <h3 id="confirm-title">Konfirmasi</h3>
+                <p id="confirm-message">Apakah Anda yakin?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-glass" id="btn-confirm-cancel">Batal</button>
+                <button class="btn btn-danger" id="btn-confirm-ok">Ya, Hapus</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== TOAST ========== -->
+    <div id="toast" class="toast">
+        <span id="toast-message"></span>
+    </div>
+
+    <!-- Import file input (hidden) -->
+    <input type="file" id="import-file-input" accept=".json" style="display:none">
 
     <script src="app.js"></script>
 </body>
